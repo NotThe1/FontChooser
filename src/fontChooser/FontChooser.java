@@ -38,12 +38,14 @@ public class FontChooser extends JDialog implements ListSelectionListener, Actio
 
 	private String initFamily;
 	private String initStyle;
-	private Integer initSize;
-	
+	private Integer initSize;	
 	private int dialogResultValue;
-
-
 	private Font selectedFont;
+	
+	private JList<String> listFamily;
+	private JList<String> listStyle;
+	private JList<Integer> listSize;
+
 
 	public Font selectedFont() {
 		return selectedFont;
@@ -60,7 +62,7 @@ public class FontChooser extends JDialog implements ListSelectionListener, Actio
 	}// doBtnCancel
 	
 	public static Integer getStyleFromText(String textStyle){
-		int styleFromTextDisplay = Font.PLAIN;
+		int styleFromTextDisplay;
 		switch (textStyle) {
 		case STYLE_PLAIN:
 			styleFromTextDisplay = Font.PLAIN;
@@ -74,9 +76,11 @@ public class FontChooser extends JDialog implements ListSelectionListener, Actio
 		case STYLE_BOLD_ITALIC:
 			styleFromTextDisplay = Font.BOLD | Font.ITALIC;
 			break;
+		default:
+			styleFromTextDisplay = Font.PLAIN;
 		}// switch
 		return styleFromTextDisplay;
-	}//
+	}//getStyleFromText
 
 
 	private void doSelection() {
@@ -90,7 +94,6 @@ public class FontChooser extends JDialog implements ListSelectionListener, Actio
 
 		String display = String.format("%s %s %s", textFamily.getText(), textStyle.getText(), textSize.getText());
 		lblSelectedFont.setText(display);
-
 	}// doSelection
 		// ---------------------------------------------------------------
 
@@ -98,7 +101,7 @@ public class FontChooser extends JDialog implements ListSelectionListener, Actio
 		DefaultListModel<Integer> sizeModel = new DefaultListModel<Integer>();
 		for (Integer i = 5; i < 100; i++) {
 			sizeModel.addElement(i);
-		} //
+		} //for size
 		listSize.setModel(sizeModel);
 		listSize.setSelectedValue(initSize, true);
 
@@ -106,15 +109,15 @@ public class FontChooser extends JDialog implements ListSelectionListener, Actio
 		DefaultListModel<String> familyModel = new DefaultListModel<String>();
 		for (String f : fontNames) {
 			familyModel.addElement(f);
-		} // for
+		} // for family
 		listFamily.setModel(familyModel);
 		listFamily.setSelectedValue(initFamily, true);
 
-		String[] styles = new String[] { STYLE_PLAIN, STYLE_BOLD, STYLE_ITALIC, "Bold Italic" };
+		String[] styles = new String[] { STYLE_PLAIN, STYLE_BOLD, STYLE_ITALIC, STYLE_BOLD_ITALIC };
 		DefaultListModel<String> styleModel = new DefaultListModel<String>();
 		for (String s : styles) {
 			styleModel.addElement(s);
-		} // for
+		} // for style
 		listStyle.setModel(styleModel);
 		listStyle.setSelectedValue(initStyle, true);
 
@@ -139,6 +142,9 @@ public class FontChooser extends JDialog implements ListSelectionListener, Actio
 		appInit();
 	}// Constructor
 
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public FontChooser(Window w,Font currentFont) {
 		super(w,"Font Chooser",Dialog.DEFAULT_MODALITY_TYPE);
 		
@@ -316,9 +322,6 @@ public class FontChooser extends JDialog implements ListSelectionListener, Actio
 	private JTextField textFamily;
 	private JTextField textStyle;
 	private JTextField textSize;
-	private JList<String> listFamily;
-	private JList<String> listStyle;
-	private JList<Integer> listSize;
 
 	@Override
 	public void valueChanged(ListSelectionEvent arg0) {
